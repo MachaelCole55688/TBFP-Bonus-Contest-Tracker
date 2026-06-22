@@ -377,6 +377,8 @@ const DATA = [
   }
 ];
 
+const HIDDEN_MATCHES = new Set([]);
+  
 function matchLink(match){
   if(!match.matchId) return GAME_URL;
   const sport = match.league === 'FIFA' ? 'football' : 'basketball';
