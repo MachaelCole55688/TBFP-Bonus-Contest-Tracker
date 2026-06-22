@@ -194,6 +194,9 @@ function buildData(rows, options = {}) {
 
 function replaceDataBlock(html, data) {
   const replacement = `const DATA = ${JSON.stringify(data, null, 2)};`;
+  if (html.includes('const HIDDEN_MATCHES = new Set([')) {
+    return html.replace(/const DATA = [\s\S]*?;\n\nconst HIDDEN_MATCHES/, `${replacement}\n\nconst HIDDEN_MATCHES`);
+  }
   return html.replace(/const DATA = [\s\S]*?;\n\nfunction matchLink/, `${replacement}\n\nfunction matchLink`);
 }
 
