@@ -130,6 +130,12 @@ function isGuaranteedPrizePool(league, contest) {
     || (league === 'WNBA' && /Winner Takes All/i.test(contest));
 }
 
+function defaultGuaranteedPrize(league, contest) {
+  if (league === 'WNBA' && /Winner Takes All/i.test(contest)) return 300;
+  if (league === 'FIFA' && /World Cup Kickoff Clash/i.test(contest)) return 500;
+  return null;
+}
+
 function normalizeIds(league, rawMatchId, rawContestId) {
   let matchId = String(rawMatchId || '').trim();
   let contestId = String(rawContestId || '').trim();
@@ -183,8 +189,12 @@ function buildData(rows, options = {}) {
     };
 
     if (isRubyContest(contest)) item.ruby = true;
-    if (isGuaranteedPrizePool(league, contest) && extraBonus) item.guaranteedPrize = extraBonus;
-    else if (extraBonus) item.bonus = extraBonus;
+
+    if (isGuaranteedPrizePool(league, contest)) {
+      item.guaranteedPrize = extraBonus || defaultGuaranteedPrize(league, contest);
+    } else if (extraBonus) {
+      item.bonus = extraBonus;
+    }
 
     data.push(item);
   });
