@@ -71,6 +71,11 @@ h1{font-family:'Barlow Condensed';font-size:clamp(44px,8vw,82px);line-height:.9;
 .contest-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .contest-card{background:linear-gradient(180deg,#ffffff,#fbfdff);border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:12px;min-width:0;box-shadow:0 12px 28px rgba(23,32,51,.07);transform:translateY(0);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;opacity:0;animation:cardReveal .45s ease forwards}
 .contest-card:hover{transform:translateY(-4px);box-shadow:0 18px 34px rgba(23,32,51,.12);border-color:#cfd9e5}
+.contest-card.finals-card{position:relative;border-color:rgba(200,141,22,.5);background:linear-gradient(180deg,#fffdf7 0%,#ffffff 38%,#fbfdff 100%);box-shadow:0 16px 36px rgba(200,141,22,.12),0 12px 28px rgba(23,32,51,.07);overflow:hidden}
+.contest-card.finals-card::before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 0%,rgba(255,230,165,0) 35%,rgba(255,230,165,.38) 50%,rgba(255,230,165,0) 65%,transparent 100%);transform:translateX(-120%);animation:finalsSweep 4.8s ease-in-out infinite;pointer-events:none}
+.contest-card.finals-card::after{content:"";position:absolute;inset:0;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(255,233,173,.55);pointer-events:none}
+.finals-badge{display:inline-flex;align-items:center;gap:6px;min-height:24px;border-radius:999px;padding:0 10px;background:linear-gradient(180deg,#fff7dd,#ffefb8);border:1px solid #edcc7a;color:#8a5b05;font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;box-shadow:0 6px 16px rgba(200,141,22,.16);margin-top:8px}
+.finals-badge .cup{display:inline-block;animation:finalsCupFloat 2.6s ease-in-out infinite}
 .contest-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
 .contest-head-main{min-width:0}
 .contest-head-side{display:flex;justify-content:flex-end;flex:1;min-width:250px}
@@ -159,12 +164,20 @@ h1{font-family:'Barlow Condensed';font-size:clamp(44px,8vw,82px);line-height:.9;
   55%{opacity:1;transform:translateY(-4px) scale(1)}
   100%{opacity:0;transform:translateY(-14px) scale(1.05)}
 }
+@keyframes finalsSweep{
+  0%,18%{transform:translateX(-120%)}
+  34%,100%{transform:translateX(140%)}
+}
+@keyframes finalsCupFloat{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  50%{transform:translateY(-2px) rotate(-6deg)}
+}
 @keyframes cardReveal{
   from{opacity:0;transform:translateY(14px)}
   to{opacity:1;transform:translateY(0)}
 }
 @media (prefers-reduced-motion:reduce){
-  .sport-icon,.countdown-badge,.contest-card,.money-pop span{animation:none!important}
+  .sport-icon,.countdown-badge,.contest-card,.money-pop span,.contest-card.finals-card::before,.finals-badge .cup{animation:none!important}
   .contest-card{opacity:1}
   .money-pop span{opacity:1;transform:none}
 }
@@ -430,6 +443,36 @@ const DATA = [
     "guaranteedPrize": 300
   },
   {
+    "date": "2026-06-26",
+    "label": "June 26",
+    "day": "Fri.",
+    "league": "FIFA",
+    "contest": "🌍 World Cup Kickoff Clash",
+    "game": "JPN vs SWE",
+    "matchId": "392922",
+    "contestId": "198471",
+    "entry": 50,
+    "participants": null,
+    "slips": null,
+    "spots": 100,
+    "guaranteedPrize": 500
+  },
+  {
+    "date": "2026-06-26",
+    "label": "June 26",
+    "day": "Fri.",
+    "league": "FIFA",
+    "contest": "🌍 World Cup Kickoff Clash",
+    "game": "TUR vs USA",
+    "matchId": "392923",
+    "contestId": "198472",
+    "entry": 50,
+    "participants": null,
+    "slips": null,
+    "spots": 100,
+    "guaranteedPrize": 500
+  },
+  {
     "date": "2026-06-27",
     "label": "June 27",
     "day": "Sat.",
@@ -460,6 +503,36 @@ const DATA = [
     "guaranteedPrize": 300
   },
   {
+    "date": "2026-06-27",
+    "label": "June 27",
+    "day": "Sat.",
+    "league": "FIFA",
+    "contest": "🌍 World Cup Kickoff Clash",
+    "game": "NOR vs FRA",
+    "matchId": "392925",
+    "contestId": "198522",
+    "entry": 50,
+    "participants": null,
+    "slips": null,
+    "spots": 100,
+    "guaranteedPrize": 500
+  },
+  {
+    "date": "2026-06-27",
+    "label": "June 27",
+    "day": "Sat.",
+    "league": "FIFA",
+    "contest": "🌍 World Cup Kickoff Clash",
+    "game": "URU vs SPN",
+    "matchId": "392927",
+    "contestId": "198523",
+    "entry": 50,
+    "participants": null,
+    "slips": null,
+    "spots": 100,
+    "guaranteedPrize": 500
+  },
+  {
     "date": "2026-06-28",
     "label": "June 28",
     "day": "Sun.",
@@ -488,6 +561,36 @@ const DATA = [
     "slips": null,
     "spots": 100,
     "guaranteedPrize": 300
+  },
+  {
+    "date": "2026-06-28",
+    "label": "June 28",
+    "day": "Sun.",
+    "league": "FIFA",
+    "contest": "🌍 World Cup Kickoff Clash",
+    "game": "COL vs POR",
+    "matchId": "392933",
+    "contestId": "198567",
+    "entry": 50,
+    "participants": null,
+    "slips": null,
+    "spots": 100,
+    "guaranteedPrize": 500
+  },
+  {
+    "date": "2026-06-28",
+    "label": "June 28",
+    "day": "Sun.",
+    "league": "FIFA",
+    "contest": "🌍 World Cup Kickoff Clash",
+    "game": "JOR vs ARG",
+    "matchId": "392935",
+    "contestId": "198568",
+    "entry": 50,
+    "participants": null,
+    "slips": null,
+    "spots": 100,
+    "guaranteedPrize": 500
   },
   {
     "date": "2026-06-29",
@@ -825,8 +928,26 @@ function featuredPlayers(game){
   ).join('') + '</div>';
 }
 
+function isFinalsMatch(match){
+  return match.date === '2026-07-01' && /Championship Showdown/i.test(match.contests.map(item => item.contest).join(' '));
+}
+
+function todayTaipeiIso(){
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone:'Asia/Taipei',
+    year:'numeric',
+    month:'2-digit',
+    day:'2-digit'
+  }).formatToParts(new Date()).reduce((acc, part) => {
+    acc[part.type] = part.value;
+    return acc;
+  }, {});
+  return parts.year + '-' + parts.month + '-' + parts.day;
+}
+
 function render(){
-  const filtered = DATA.filter(item => !HIDDEN_MATCHES.has([item.date, item.league, item.game].join('|')));
+  const today = todayTaipeiIso();
+  const filtered = DATA.filter(item => item.date >= today && !HIDDEN_MATCHES.has([item.date, item.league, item.game].join('|')));
   const matches = groupMatches(filtered);
   const groups = matches.reduce((acc,item) => {
     (acc[item.date] ||= {label:item.label, day:item.day, rows:[]}).rows.push(item);
@@ -836,11 +957,13 @@ function render(){
   schedule.innerHTML = Object.entries(groups).map(([date, group]) => {
     const cards = group.rows.map((match, index) => {
       const isOpen = Boolean(match.matchId);
+      const isFinals = isFinalsMatch(match);
       const disabled = isOpen ? '' : ' disabled';
       const joinText = isOpen ? 'Open Match' : 'Coming Soon';
       const totalSpots = match.contests.reduce((sum, item) => sum + (Number(item.spots) || 0), 0);
       const entrySummary = matchEntrySummary(match);
       const relativeMeta = relativeDateMeta(match.date);
+      const finalsBadge = isFinals ? '<div class="finals-badge"><span class="cup">🏆</span><span>Commissioner\'s Cup Finals</span></div>' : '';
       const contests = match.contests.map(item =>
         '<div class="contest-option">' +
           '<div><div class="option-name">' + item.contest + '</div><div class="option-meta"><span class="mini-pill">Entry ' + entryLabel(item) + '</span><span class="mini-pill">Spots ' + plain(item.spots) + '</span>' + tags(item) + '</div></div>' +
@@ -851,8 +974,8 @@ function render(){
       const detailsBlock = isOpen
         ? '<div class="contest-options">' + contests + '</div>'
         : '<div class="coming-soon-note">This match is not open yet. Contest options will appear here once it becomes available.</div>';
-      return '<article class="contest-card" style="animation-delay:' + (index * 0.08).toFixed(2) + 's">' +
-        '<div class="contest-top"><div class="contest-head-main"><span class="league ' + match.league + '">' + leagueIcon(match.league) + match.league + '</span><div class="contest-name">' + statusText + '</div><div class="countdown-row"><span class="countdown-badge">' + relativeMeta.badge + '</span><span class="countdown-note">' + relativeMeta.note + '</span></div>' + matchupLogos(match.game) + '<div class="game">' + match.game + '</div></div><div class="contest-head-side">' + featuredPlayers(match.game) + '</div></div>' +
+      return '<article class="contest-card' + (isFinals ? ' finals-card' : '') + '" style="animation-delay:' + (index * 0.08).toFixed(2) + 's">' +
+        '<div class="contest-top"><div class="contest-head-main"><span class="league ' + match.league + '">' + leagueIcon(match.league) + match.league + '</span>' + finalsBadge + '<div class="contest-name">' + statusText + '</div><div class="countdown-row"><span class="countdown-badge">' + relativeMeta.badge + '</span><span class="countdown-note">' + relativeMeta.note + '</span></div>' + matchupLogos(match.game) + '<div class="game">' + match.game + '</div></div><div class="contest-head-side">' + featuredPlayers(match.game) + '</div></div>' +
         '<div class="metrics">' +
           '<div class="metric"><div class="metric-label">Entry Fee</div><div class="metric-value">' + entrySummary + '</div></div>' +
           '<div class="metric"><div class="metric-label">Contests</div><div class="metric-value">' + match.contests.length + '</div></div>' +
