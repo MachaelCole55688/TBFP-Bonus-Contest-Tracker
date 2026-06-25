@@ -125,13 +125,17 @@ function isRubyContest(name) {
   return /RUBY BONUS/i.test(name) || /^100K\b/i.test(name) || /^500K\b/i.test(name);
 }
 
-function isGuaranteedPrizePool(league, contest) {
+function isGuaranteedPrizePool(date, league, contest) {
+  if (league === 'FIFA' && date >= '2026-06-29') return true;
   return (league === 'FIFA' && /World Cup Kickoff Clash/i.test(contest))
-    || (league === 'WNBA' && /Winner Takes All/i.test(contest));
+    || (league === 'WNBA' && /Winner Takes All/i.test(contest))
+    || (league === 'WNBA' && /Championship Showdown/i.test(contest));
 }
 
-function defaultGuaranteedPrize(league, contest) {
+function defaultGuaranteedPrize(date, league, contest) {
+  if (league === 'FIFA' && date >= '2026-06-29') return 1000;
   if (league === 'WNBA' && /Winner Takes All/i.test(contest)) return 300;
+  if (league === 'WNBA' && /Championship Showdown/i.test(contest)) return 1000;
   if (league === 'FIFA' && /World Cup Kickoff Clash/i.test(contest)) return 500;
   return null;
 }
@@ -190,8 +194,8 @@ function buildData(rows, options = {}) {
 
     if (isRubyContest(contest)) item.ruby = true;
 
-    if (isGuaranteedPrizePool(league, contest)) {
-      item.guaranteedPrize = extraBonus || defaultGuaranteedPrize(league, contest);
+    if (isGuaranteedPrizePool(currentDate, league, contest)) {
+      item.guaranteedPrize = extraBonus || defaultGuaranteedPrize(currentDate, league, contest);
     } else if (extraBonus) {
       item.bonus = extraBonus;
     }
