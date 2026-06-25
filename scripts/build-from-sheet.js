@@ -2,7 +2,7 @@ const fs = require('fs');
 const https = require('https');
 
 const DEFAULT_SPREADSHEET_ID = '1KoimJYlZEiAK5Y_kXgJ85_VBKWGP3hRabv2zva-ahAo';
-const DEFAULT_SHEET_GID = '69157915';
+const DEFAULT_SHEET_GIDS = ['69157915', '919748816'];
 const DEFAULT_YEAR = 2026;
 
 function taipeiDate(offsetDays = 0) {
@@ -229,26 +229,53 @@ function updateHtmlFiles(htmlPaths, data) {
 
 async function runUpdate(options = {}) {
   const spreadsheetId = options.spreadsheetId || process.env.SPREADSHEET_ID || DEFAULT_SPREADSHEET_ID;
-  const sheetGid = options.sheetGid || process.env.SHEET_GID || DEFAULT_SHEET_GID;
+  const configuredGids = options.sheetGids
+    || (process.env.SHEET_GIDS ? process.env.SHEET_GIDS.split(',').map(value => value.trim()).filter(Boolean) : null)
+    || (process.env.SHEET_GID ? [process.env.SHEET_GID] : null)
+    || DEFAULT_SHEET_GIDS;
   const showFrom = options.showFrom || process.env.SHOW_FROM || taipeiDate(0);
   const fallbackYear = options.fallbackYear || Number(process.env.SHEET_YEAR || DEFAULT_YEAR);
   const htmlPaths = options.htmlPaths || ['index.html'];
-  const csvUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&gid=${sheetGid}`;
+  const gids = [...new Set(configuredGids)];
 
-  const csv = await fetchText(csvUrl);
-  const rows = parseCsv(csv);
-  const data = buildData(rows, { showFrom, fallbackYear });
+  const allData = [];
+  const csvUrls = [];
+
+  for (const gid of gids) {
+    const csvUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&gid=${gid}`;
+    const csv = await fetchText(csvUrl);
+    const rows = parseCsv(csv);
+    const data = buildData(rows, { showFrom, fallbackYear });
+    allData.push(...data);
+    csvUrls.push(csvUrl);
+  }
+
+  const data = allData
+    .sort((a, b) => {
+      const dateCompare = String(a.date).localeCompare(String(b.date));
+      if (dateCompare) return dateCompare;
+      const leagueCompare = String(a.league).localeCompare(String(b.league));
+      if (leagueCompare) return leagueCompare;
+      const gameCompare = String(a.game).localeCompare(String(b.game));
+      if (gameCompare) return gameCompare;
+      return String(a.contestId || '').localeCompare(String(b.contestId || ''));
+    })
+    .filter((item, index, list) => {
+      const key = [item.date, item.league, item.game, item.contest, item.matchId || '', item.contestId || ''].join('|');
+      return index === list.findIndex(entry => [entry.date, entry.league, entry.game, entry.contest, entry.matchId || '', entry.contestId || ''].join('|') === key);
+    });
+
   updateHtmlFiles(htmlPaths, data);
 
   const matchCount = new Set(data.map(item => [item.date, item.league, item.game, item.matchId || 'pending'].join('|'))).size;
 
-  console.log(`Google Sheet CSV: ${csvUrl}`);
+  console.log(`Google Sheet CSVs: ${csvUrls.join(' , ')}`);
   console.log(`Showing from: ${showFrom}`);
   console.log(`Contest rows: ${data.length}`);
   console.log(`Match cards: ${matchCount}`);
   htmlPaths.forEach(htmlPath => console.log(`Updated: ${htmlPath}`));
 
-  return { data, matchCount, showFrom, csvUrl };
+  return { data, matchCount, showFrom, csvUrls };
 }
 
 module.exports = {
